@@ -1,0 +1,44 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab3"
+        xmlns:WindowsPresentation="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation" x:Class="Lab3.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="599.167" Width="1000">
+    <Grid>
+
+
+        <Grid Name="Maps" Height="Auto" Width="Auto" Margin="250,85,21,21">
+            <WindowsPresentation:GMapControl Name="Map" MouseDoubleClick="Map_MouseDoubleClick"/>
+
+
+        </Grid>
+        <ComboBox x:Name="combox" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="Combox_SelectionChanged">
+            <ComboBoxItem>point</ComboBoxItem>
+            <ComboBoxItem>car</ComboBoxItem>
+            <ComboBoxItem>people</ComboBoxItem>
+            <ComboBoxItem>route</ComboBoxItem>
+            <ComboBoxItem>area</ComboBoxItem>
+        </ComboBox>
+        <TextBox x:Name="OName" HorizontalAlignment="Left" Height="25" Margin="10,219,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="220"/>
+        <ListBox x:Name="OList" HorizontalAlignment="Left" Height="144" Margin="10,354,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="OList_SelectionChanged" MouseLeave="OList_MouseLeave" SelectedIndex="0">
+            <ListBoxItem/>
+        </ListBox>
+        <Button x:Name="createra" Content="OK" HorizontalAlignment="Left" Height="26" Margin="100,188,0,0" VerticalAlignment="Top" Width="130" IsEnabled="False" Click="Createra_Click"/>
+        <RadioButton x:Name="createrb" Content="creation mode" HorizontalAlignment="Left" Margin="10,249,0,0" VerticalAlignment="Top" Height="19" Width="96" Checked="Createrb_Checked" RenderTransformOrigin="0.479,1.842"/>
+        <RadioButton x:Name="findrb" Content="find nearest" HorizontalAlignment="Left" Margin="10,273,0,0" VerticalAlignment="Top" Checked="Findrb_Checked" RenderTransformOrigin="0.659,4.067"/>
+        <Label Content="Name's here:" HorizontalAlignment="Left" Margin="10,188,0,0" VerticalAlignment="Top" Width="85" RenderTransformOrigin="0.483,0.5"/>
+        <TextBox x:Name="objfind" HorizontalAlignment="Left" Height="25" Margin="10,324,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="220" IsEnabled="False"/>
+        <Label Content="Name's here:" HorizontalAlignment="Left" Margin="10,293,0,0" VerticalAlignment="Top" Width="85" RenderTransformOrigin="0.483,0.5"/>
+        <Button x:Name="finder" Content="FIND" HorizontalAlignment="Left" Height="26" Margin="100,293,0,0" VerticalAlignment="Top" Width="130" IsEnabled="False" Click="Finder_Click"/>
+        <Button x:Name="clearpoints" Content="CLEAR POINTS" HorizontalAlignment="Left" Height="26" Margin="100,157,0,0" VerticalAlignment="Top" Width="130" IsEnabled="False" Click="Clearpoints_Click"/>
+        <Button x:Name="ChooseH" Content="PASSANGER" HorizontalAlignment="Left" Height="26" Margin="250,10,0,0" VerticalAlignment="Top" Width="130" Click="ChooseH_Click" IsEnabled="False"/>
+        <Button x:Name="ChooseD" Content="DESTINATION" HorizontalAlignment="Left" Height="26" Margin="250,41,0,0" VerticalAlignment="Top" Width="130" IsEnabled="False" Click="ChooseD_Click"/>
+        <ProgressBar x:Name="CBar" HorizontalAlignment="Left" Height="57" Margin="385,10,0,0" VerticalAlignment="Top" Width="500" Value="-1"/>
+        <Button x:Name="CallT" Content="CALL TAXI" HorizontalAlignment="Left" Height="57" Margin="890,10,0,0" VerticalAlignment="Top" Width="92" IsEnabled="False" Click="CallT_Click"/>
+        <Label x:Name="l1" Content="Label" HorizontalAlignment="Left" Margin="21,524,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="l2" Content="Label" HorizontalAlignment="Left" Margin="82,524,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>
