@@ -63,27 +63,72 @@ namespace Lab3
 
         private void Map_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
+            if(selectpas == true)
+            {
+                var Obj = mapObjects.OrderBy(mapObject => mapObject.getDistance(point));
+                foreach (MapObject obj in Obj)
+                {
+                    if (obj is Human)
+                    {
+                        Passanger = (Human)obj;
+                        selectpas = false;
+                        if (destselected == true)
+                        {
+                            Passanger.DPoint = destination;
+                            RStart = Passanger.getFocus();
+                            MessageBox.Show("Now you can call taxi");
+                            CallT.IsEnabled = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Your choise is - " + "'" + Passanger.objectName + "'" + ", now choose the Destination");
+                        }
+                        break;
+                    }
+                }
+            }
+            if(selectdis == true)
+            {
+                var Obj = mapObjects.OrderBy(mapObject => mapObject.getDistance(point));
+                foreach (MapObject obj in Obj)
+                {
+                    if ((obj is Human && obj != Passanger) || obj is Location_c || obj is Area || obj is Route_c)
+                    {
+                        destselected = true;
+                        selectdis = false;
+                        destination = obj.getFocus();
+                        if (Passanger != null)
+                        {
+                            Passanger.DPoint = destination;
+                            RFinish = Passanger.DPoint;
+                            MessageBox.Show("Now you can call taxi");
+                            CallT.IsEnabled = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Сhoose a passenger to travel");
+                        }
+                        break;
+                    }
+                }
+            }
             if (creationmode == true)
             {
                 if (combox.SelectedIndex == 0)
                 {
-                    point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
                     createra.IsEnabled = true;
-                    
                 }
                 if (combox.SelectedIndex == 1)
                 {
-                    point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
                     createra.IsEnabled = true;
                 }
                 if (combox.SelectedIndex == 2)
                 {
-                    point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
                     createra.IsEnabled = true;
                 }
                 if (combox.SelectedIndex == 3)
                 {
-                    point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
                     routepoints.Add(point);
                     rpointc += 1;
                     if (rpointc >= 2)
@@ -95,7 +140,6 @@ namespace Lab3
                 }
                 if (combox.SelectedIndex == 4)
                 {
-                    point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
                     areapoints.Add(point);
                     apointc += 1;
                     if (apointc >= 3)
@@ -109,7 +153,6 @@ namespace Lab3
             {
                 OList.Items.Clear();
                 OList.Items.Add(null);
-                PointLatLng point = Map.FromLocalToLatLng((int)e.GetPosition(Map).X, (int)e.GetPosition(Map).Y);
                 secondList = mapObjects.OrderBy(mobject => mobject.getDistance(point)).ToList();
                 foreach (MapObject obj in secondList)
                 {
@@ -406,63 +449,22 @@ namespace Lab3
 
         private void ChooseH_Click(object sender, RoutedEventArgs e)
         {
-            secondList.Clear();
-            OList.Items.Clear();
-            for (int i = 0; i < mapObjects.Count; i++)
-            {
-                if (i == 0)
-                {
-                    OList.Items.Add(null);
-                    if (mapObjects[i].objectType == "Human")
-                    {
-                        OList.Items.Add(mapObjects[i].objectType + " - " + mapObjects[i].objectName);
-                        secondList.Add(mapObjects[i]);
-                    }
-                }
-                else
-                {
-                    if (mapObjects[i].objectType == "Human")
-                    {
-                        OList.Items.Add(mapObjects[i].objectType + " - " + mapObjects[i].objectName);
-                        secondList.Add(mapObjects[i]);
-                    }
-                }
-            }
+            CBar.Value = 0;
             selectpas = true;
+            selectdis = false;
             createrb.IsChecked = false;
             findrb.IsChecked = false;
-            MessageBox.Show("Choose Passenger from List");
+            MessageBox.Show("Choose Passenger");
         }
 
         private void ChooseD_Click(object sender, RoutedEventArgs e)
         {
-            secondList.Clear();
-            OList.Items.Clear();
-            for (int i = 0; i < mapObjects.Count; i++)
-            {
-                if (i == 0)
-                {
-                    OList.Items.Add(null);
-                    if (mapObjects[i].objectType != "Car" && mapObjects[i].objectName != Passanger.objectName)
-                    {
-                        OList.Items.Add(mapObjects[i].objectType + " - " + mapObjects[i].objectName);
-                        secondList.Add(mapObjects[i]);
-                    }
-                }
-                else
-                {
-                    if (mapObjects[i].objectType != "Car" && mapObjects[i].objectName != Passanger.objectName)
-                    {
-                        OList.Items.Add(mapObjects[i].objectType + " - " + mapObjects[i].objectName);
-                        secondList.Add(mapObjects[i]);
-                    }
-                }
-            }
+            CBar.Value = 0;
             selectdis = true;
             selectpas = false;
             createrb.IsChecked = false;
             findrb.IsChecked = false;
-            MessageBox.Show("Choose Destination from List");
+            MessageBox.Show("Choose Destination");
         }
 
         private void Focus_Follow(object sender, EventArgs args)
@@ -474,8 +476,8 @@ namespace Lab3
                 (sender as Car).Follow -= Focus_Follow;
                 Map.Markers.Remove(Map.Markers.Last());
                 Map.Markers.Remove(Map.Markers.Last());
-                mapObjects.Remove(mapObjects.Last());
-                mapObjects.Remove(mapObjects.Last());
+                Passanger = null;
+                destselected = false;
                 CBar.Value += 1;
             }
             if (CBar.Value != CBar.Maximum)
@@ -488,11 +490,11 @@ namespace Lab3
         private void CallT_Click(object sender, RoutedEventArgs e)
         {
             CBar.Value = 0;
-            Human h = Passanger;
             Car nearestCar = null;
             RStart = Passanger.getFocus();
-            var besidedObj = mapObjects.OrderBy(mapObject => mapObject.getDistance(RStart));
-            foreach (MapObject obj in besidedObj)
+
+            var Obj = mapObjects.OrderBy(mapObject => mapObject.getDistance(RStart));
+            foreach (MapObject obj in Obj)
             {
                 if (obj is Car)
                 {
@@ -500,17 +502,20 @@ namespace Lab3
                     break;
                 }
             }
-
-            Passanger = null;
-            destselected = false;
+            
             CallT.IsEnabled = false;
+
             var route = nearestCar.MoveTo(RStart);
-            createroute(route.Points);
+            MapObject mapObject_path = new Route_c(OName.Text, "Route", route.Points, route.Points.First());
+            Map.Markers.Add(mapObject_path.GetMarker());
             RoutingProvider routingProvider = GMapProviders.OpenStreetMap;
+
             MapRoute rroute = routingProvider.GetRoute(RStart,RFinish,false,false,15);
-            createroute(rroute.Points);
-            nearestCar.Arrived += h.CarArrived;
-            h.seated += nearestCar.getintocar;
+            MapObject mapObject_path1 = new Route_c(OName.Text, "Route", rroute.Points, rroute.Points.First());
+            Map.Markers.Add(mapObject_path1.GetMarker());
+
+            nearestCar.Arrived += Passanger.CarArrived;
+            Passanger.seated += nearestCar.getintocar;
             nearestCar.Follow += Focus_Follow;
         }
     }
